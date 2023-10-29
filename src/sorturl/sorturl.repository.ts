@@ -20,13 +20,13 @@ export class SortUrlRepository {
     return this.findOneBySlug(slug);
   }
 
-  async findOneBySlug(slug: string) {
+  async findOneBySlug(slug: string): Promise<SortUrlModel | undefined> {
     const res = await this.db.client.execute({
       sql: 'SELECT * FROM sorturl WHERE slug = :slug',
       args: { slug },
     });
 
-    return res.rows[0] as unknown as SortUrlModel;
+    return res.rows[0] as unknown as SortUrlModel | undefined;
   }
 
   async updateVisits(id: number) {
@@ -36,12 +36,12 @@ export class SortUrlRepository {
     });
   }
 
-  async findOneById(id: bigint) {
+  async findOneById(id: bigint): Promise<SortUrlModel | undefined> {
     const res = await this.db.client.execute({
       sql: 'SELECT * FROM sorturl WHERE id = :id',
       args: { id },
     });
 
-    return res.rows[0] as unknown as SortUrlModel;
+    return res.rows[0] as unknown as SortUrlModel | undefined;
   }
 }

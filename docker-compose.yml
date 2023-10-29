@@ -1,33 +1,33 @@
 version: "3.5"
 services:
-    # app:
-    #     container_name: sort-url-api
-    #     build: # "context" and "dockerfile" fields have to be under "build"
-    #         context: .
-    #         dockerfile: ./Dockerfile # Use for Development
-    #         # dockerfile: ./Dockerfile #Use for Production
-    #     ports:
-    #         - "8686:8080" #Server
-    #         # - "40404:9001" #Supervisor
-    #     volumes:
-    #         - .:/app
-    #     env_file:
-    #         - ./.env
-    #     networks:
-    #         - app-network
-    sqllite:
-        image: a9688bd1d9bb
-              # platform: linux/x86_64 # Only for Macs (m1,m2)
+    app:
+        container_name: sort-url-api
+        build: # "context" and "dockerfile" fields have to be under "build"
+            context: .
+            dockerfile: ./Dockerfile # Use for Development
+            # dockerfile: ./Dockerfile #Use for Production
         ports:
-            - "4406:8080"
-        # volumes:
-        #     - ./src/db/dev.db:/var/lib/sqld
-        # environment:
-            # MYSQL_ROOT_PASSWORD: "root"
-                  #TZ: America/Bogota
+            - "3000:3000" #Server
+            # - "40404:9001" #Supervisor
+        volumes:
+            - .:/app
+        env_file:
+            - ./.env
         networks:
-            - app-network 
+            - app-sorturl
+    # sqllite:
+    #     image: a9688bd1d9bb
+    #           # platform: linux/x86_64 # Only for Macs (m1,m2)
+    #     ports:
+    #         - "4406:8080"
+    #     # volumes:
+    #     #     - ./src/db/dev.db:/var/lib/sqld
+    #     # environment:
+    #         # MYSQL_ROOT_PASSWORD: "root"
+    #               #TZ: America/Bogota
+    #     networks:
+    #         - app-network 
 networks: 
-    app-network:
+    app-sorturl:
         name:
-            devlabs_mynetwork
+            bmk_mynetwork

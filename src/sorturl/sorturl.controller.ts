@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { CreateSorturlDto } from './dto';
 import { SorturlService } from './sorturl.service';
 
@@ -7,9 +8,11 @@ export class SorturlController {
   constructor(private readonly sorturlService: SorturlService) {}
 
   @Post()
-  create(@Body() createSorturlDto: CreateSorturlDto) {
+  create(@Body() createSorturlDto: CreateSorturlDto, @Req() req: Request) {
+    const origin = req.headers.origin;
+
     try {
-      return this.sorturlService.create(createSorturlDto);
+      return this.sorturlService.create({ origin, url: createSorturlDto.url });
     } catch (error) {
       console.error({ error });
     }

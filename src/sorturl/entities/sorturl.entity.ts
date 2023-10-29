@@ -12,3 +12,8 @@ export type SortUrlModel = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type CreateSorturlService = {
+  url: string;
+  origin: string;
+};

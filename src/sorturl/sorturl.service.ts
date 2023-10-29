@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateSorturlDto, UpdateSortUrlDto } from './dto';
+import { UpdateSortUrlDto } from './dto';
+import { CreateSorturlService } from './entities/sorturl.entity';
 import { SortUrlRepository } from './sorturl.repository';
 
 @Injectable()
 export class SorturlService {
   constructor(private sortUrlRepository: SortUrlRepository) {}
 
-  create({ url }: CreateSorturlDto) {
+  create({ url, origin }: CreateSorturlService) {
     const slug = Math.random().toString(36).substring(2, 8);
-    const sortUrl = `http://localhost:3000/${slug}`;
+    const sortUrl = `${origin}/${slug}`;
 
     try {
       return this.sortUrlRepository.create({ slug, url, sortUrl });
@@ -28,12 +29,14 @@ export class SorturlService {
 
     if (findedSort) {
       this.sortUrlRepository.updateVisits(findedSort.id);
+      return {
+        ...findedSort,
+        visits: findedSort.visits + 1,
+      };
     }
 
-    return {
-      ...findedSort,
-      visits: findedSort.visits + 1,
-    };
+    console.log({ findedSort });
+    return findedSort;
   }
 
   findOneById(id: number) {

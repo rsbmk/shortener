@@ -6,9 +6,12 @@ export class DB implements OnModuleInit {
   client: Client = null;
 
   async onModuleInit() {
+    const isProduction = process.env.NODE_ENV === 'production';
     this.client = createClient({
       url: process.env.DB_URL,
-      // authToken: process.env.DB_TOKEN,
+      ...(isProduction && {
+        authToken: process.env.DB_TOKEN,
+      }),
     });
 
     this.client.execute(`
@@ -22,16 +25,5 @@ export class DB implements OnModuleInit {
         updatedAt TEXT DEFAULT NULL
       )
     `);
-
-    // USE THIS FOR LOCAL DEVELOPMENT
-
-    // const client = createClient({
-    //   url: 'file:path/to/db-file',
-    //   syncUrl: 'libsql://your-database.turso.io',
-    //   authToken: 'your-auth-token',
-    // });
-
-    // // Synchronize the embedded replica with the remote database
-    // await client.sync();
   }
 }
