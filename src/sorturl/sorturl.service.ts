@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
-import { UpdateSortUrlDto } from './dto';
-import { CreateSorturlService } from './entities/sorturl.entity';
+import { CreateSorturlDto, UpdateSortUrlDto } from './dto';
+import { SortUrlModel } from './entities/sorturl.entity';
 import { SortUrlRepository } from './sorturl.repository';
 
 @Injectable()
 export class SorturlService {
   constructor(private sortUrlRepository: SortUrlRepository) {}
 
-  create({ url, origin }: CreateSorturlService) {
+  create({ url }: CreateSorturlDto) {
     const slug = Math.random().toString(36).substring(2, 8);
+    const origin = process.env.ORIGIN;
     const sortUrl = `${origin}/${slug}`;
 
     try {
@@ -24,19 +25,18 @@ export class SorturlService {
     return `This action returns all sorturl`;
   }
 
-  async findOneBySlug({ slug }: UpdateSortUrlDto) {
+  async findOneBySlug({
+    slug,
+  }: UpdateSortUrlDto): Promise<SortUrlModel | undefined> {
     const findedSort = await this.sortUrlRepository.findOneBySlug(slug);
 
-    if (findedSort) {
-      this.sortUrlRepository.updateVisits(findedSort.id);
-      return {
-        ...findedSort,
-        visits: findedSort.visits + 1,
-      };
-    }
+    if (!findedSort) return undefined;
 
-    console.log({ findedSort });
-    return findedSort;
+    this.sortUrlRepository.updateVisits(findedSort.id);
+    return {
+      ...findedSort,
+      visits: findedSort.visits + 1,
+    };
   }
 
   findOneById(id: number) {
