@@ -6,9 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "npx nest build",
+    "prebuild": "rimraf dist",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npx nest start",
+    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -33,7 +34,8 @@
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",
     "@nestjs/schematics": "10.0.0",
-    "@nestjs/testing": "10.0.0"
+    "@nestjs/testing": "10.0.0",
+    "rimraf": "3.0.2"
   },
   "devDependencies": {
     "@types/express": "4.17.17",
