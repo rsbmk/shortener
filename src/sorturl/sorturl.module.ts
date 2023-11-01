@@ -7,5 +7,6 @@ import { SorturlService } from './sorturl.service';
 @Module({
   controllers: [SorturlController],
   providers: [SorturlService, SortUrlRepository, DB],
+  exports: [SorturlService, SortUrlRepository, DB],
 })
 export class SorturlModule {}

@@ -2,15 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
-import { DB } from './db/db.service';
+import { AuthModule } from './auth/auth.module';
 import { SorturlModule } from './sorturl/sorturl.module';
-import { SortUrlRepository } from './sorturl/sorturl.repository';
-import { SorturlService } from './sorturl/sorturl.service';
 
 @Module({
-  imports: [SorturlModule, ConfigModule.forRoot()],
+  imports: [SorturlModule, ConfigModule.forRoot(), AuthModule],
   controllers: [AppController],
-  providers: [SorturlService, SortUrlRepository, DB],
-  exports: [],
 })
 export class AppModule {}

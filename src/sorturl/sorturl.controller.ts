@@ -8,9 +8,9 @@ export class SorturlController {
   constructor(private readonly sorturlService: SorturlService) {}
 
   @Post()
-  create(@Body() createSorturlDto: CreateSorturlDto) {
+  create(@Body() { url, name }: CreateSorturlDto) {
     try {
-      return this.sorturlService.create({ url: createSorturlDto.url });
+      return this.sorturlService.create({ url, name });
     } catch (error) {
       console.error({ error });
     }

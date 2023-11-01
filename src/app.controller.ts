@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { Public } from './auth/auth.module';
 import { SortUrlModel } from './sorturl/entities/sorturl.entity';
 import { SorturlService } from './sorturl/sorturl.service';
 
@@ -7,6 +8,7 @@ import { SorturlService } from './sorturl/sorturl.service';
 export class AppController {
   constructor(private readonly sorturlService: SorturlService) {}
 
+  @Public()
   @Get(':slug')
   async findOne(@Param('slug') slug: string, @Res() res: Response) {
     let sorturl: SortUrlModel = undefined;

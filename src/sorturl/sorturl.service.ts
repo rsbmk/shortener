@@ -8,9 +8,11 @@ import { SortUrlRepository } from './sorturl.repository';
 export class SorturlService {
   constructor(private sortUrlRepository: SortUrlRepository) {}
 
-  create({ url }: CreateSorturlDto) {
-    const slug = Math.random().toString(36).substring(2, 8);
+  create({ url, name }: CreateSorturlDto) {
     const origin = process.env.ORIGIN;
+    let slug = Math.random().toString(36).substring(2, 8);
+
+    if (name) slug = name;
     const sortUrl = `${origin}/${slug}`;
 
     try {
