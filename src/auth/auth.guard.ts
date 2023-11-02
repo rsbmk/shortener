@@ -10,7 +10,12 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UserAuth } from 'src/users/entities/user.entity';
 import { IS_PUBLIC_KEY } from './auth.module';
-import { jwtConstants } from './constants';
+// import { jwtConstants } from './constants';
+export const jwtConstants = {
+  // secret: process.env.JWT_SECRET,
+  secret: 'rsbmk',
+  expires: '12h',
+};
 
 @Injectable()
 export class AuthGuard implements CanActivate {

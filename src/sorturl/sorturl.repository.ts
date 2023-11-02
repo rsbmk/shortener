@@ -1,28 +1,29 @@
 import { Injectable } from '@nestjs/common';
 
 import { DB } from 'src/db/db.service';
-import { CreateSortUrl, SortUrlModel } from './entities/sorturl.entity';
+import { CreateSortUrlRepo, SortUrlModel } from './entities/sorturl.entity';
 
 @Injectable()
 export class SortUrlRepository {
   constructor(private db: DB) {}
 
-  async create({ slug, url, sortUrl }: CreateSortUrl) {
-    try {
-      await this.db.client.execute({
-        sql: 'INSERT INTO sorturl (slug, url, sortUrl) VALUES (:slug, :url, :sortUrl)',
-        args: { slug, url, sortUrl },
+  async create({ slug, url, sortUrl, userId }: CreateSortUrlRepo) {
+    await this.db.client
+      .execute({
+        sql: 'INSERT INTO sorturl (slug, url, sortUrl, userId) VALUES (:slug, :url, :sortUrl, :userId)',
+        args: { slug, url, sortUrl, userId },
+      })
+      .catch((err) => {
+        const message = this.db.ERROR_MESSAGE_BY_ERROR_CODE[err.code].message;
+        throw new Error(message);
       });
-    } catch (error) {
-      console.error('error create sorturl');
-    }
 
     return this.findOneBySlug(slug);
   }
 
   async findOneBySlug(slug: string): Promise<SortUrlModel | undefined> {
     const res = await this.db.client.execute({
-      sql: 'SELECT * FROM sorturl WHERE slug = :slug',
+      sql: 'SELECT * FROM sorturl WHERE slug = :slug AND state = 1',
       args: { slug },
     });
 
@@ -38,7 +39,7 @@ export class SortUrlRepository {
 
   async findOneById(id: bigint): Promise<SortUrlModel | undefined> {
     const res = await this.db.client.execute({
-      sql: 'SELECT * FROM sorturl WHERE id = :id',
+      sql: 'SELECT * FROM sorturl WHERE id = :id AND state = 1',
       args: { id },
     });
 

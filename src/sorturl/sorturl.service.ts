@@ -1,26 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { CreateSorturlDto, UpdateSortUrlDto } from './dto';
-import { SortUrlModel } from './entities/sorturl.entity';
+import { UpdateSortUrlDto } from './dto';
+import { CreateSortUrlService, SortUrlModel } from './entities/sorturl.entity';
 import { SortUrlRepository } from './sorturl.repository';
 
 @Injectable()
 export class SorturlService {
   constructor(private sortUrlRepository: SortUrlRepository) {}
 
-  create({ url, name }: CreateSorturlDto) {
+  create({ url, name, userId }: CreateSortUrlService) {
     const origin = process.env.ORIGIN;
     let slug = Math.random().toString(36).substring(2, 8);
 
     if (name) slug = name;
     const sortUrl = `${origin}/${slug}`;
 
-    try {
-      return this.sortUrlRepository.create({ slug, url, sortUrl });
-    } catch (error) {
-      console.log('cath service');
-    }
-    return 'Something went wrong';
+    return this.sortUrlRepository
+      .create({ slug, url, sortUrl, userId })
+      .catch((err) => {
+        throw new BadRequestException(err.message);
+      });
   }
 
   findAll() {

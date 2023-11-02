@@ -1,40 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+
+const bcrypt = require('bcrypt');
+
 import { UsersModel } from './entities/user.entity';
 import { CreateUsersDto } from './users.dto';
+import { UsersRepository } from './users.reppsitory';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUsersDto) {
-    // TODO: Create a new user and bycrypt its password
-    return 'This action adds a new user';
+  constructor(private userRepository: UsersRepository) {}
+
+  async create({ password, username }: CreateUsersDto) {
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    return await this.userRepository
+      .create({
+        username,
+        password: hashPassword,
+      })
+      .catch((error) => {
+        let message = 'Error to create user';
+        if (error instanceof Error) message = error.message;
+        throw new BadRequestException(message);
+      });
   }
 
   findAll() {
     return `This action returns all users`;
   }
-  private readonly users: UsersModel[] = [
-    {
-      id: 1,
-      username: 'john',
-      password: 'changeme',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deletedAt: null,
-      state: true,
-    },
-    {
-      id: 2,
-      username: 'maria',
-      password: 'guess',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deletedAt: null,
-      state: true,
-    },
-  ];
 
-  async findOne(username: string) {
-    return this.users.find((user) => user.username === username);
+  async findOne(username: string): Promise<UsersModel | undefined> {
+    const user = await this.userRepository.findOneByUsername(username);
+    if (!user) return undefined;
+
+    return user;
   }
 
   update(id: number, updateUserDto: CreateUsersDto) {

@@ -1,16 +1,13 @@
 import { Module, SetMetadata } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard, jwtConstants } from './auth.guard';
 import { AuthService } from './auth.service';
-import { jwtConstants } from './constants';
 
 export const IS_PUBLIC_KEY = 'isPublic';
-/**
- * Make public routes with this decorator.
- */
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 @Module({
@@ -26,7 +23,7 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
   providers: [
     AuthService,
     {
-      provide: 'APP_GUARD',
+      provide: APP_GUARD,
       useClass: AuthGuard,
     },
   ],

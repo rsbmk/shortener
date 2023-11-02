@@ -3,20 +3,26 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
+  SetMetadata,
 } from '@nestjs/common';
 import { CreateUsersDto } from './users.dto';
 import { UsersService } from './users.service';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUsersDto) {
-    return this.usersService.create(createUserDto);
+  @Public()
+  async create(@Body() createUserDto: CreateUsersDto) {
+    return await this.usersService.create(createUserDto);
   }
 
   @Get()
@@ -26,7 +32,10 @@ export class UsersController {
 
   @Get(':usernmae')
   findOne(@Param('usernmae') usernmae: string) {
-    return this.usersService.findOne(usernmae);
+    const user = this.usersService.findOne(usernmae);
+    if (!user) throw new NotFoundException('User not found');
+
+    return user;
   }
 
   @Patch(':id')

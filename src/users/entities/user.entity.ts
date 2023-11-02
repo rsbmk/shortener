@@ -2,10 +2,10 @@ export type UsersModel = {
   id: number;
   username: string;
   password: string;
-  state: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
+  state: 1 | 0;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 };
 
 /**
@@ -15,7 +15,7 @@ export type UserAuth = {
   id: number;
   username: string;
   state: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 };
