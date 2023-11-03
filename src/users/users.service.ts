@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 const bcrypt = require('bcrypt');
 
@@ -29,9 +25,7 @@ export class UsersService {
     return this.returnUserWithoutPassword(createdUser);
   }
 
-  async findOneByUsernameAndPassword(
-    username: string,
-  ): Promise<UsersModel | undefined> {
+  async findOneByUsernameAndPassword(username: string): Promise<UsersModel | undefined> {
     const user = await this.userRepository.findOneByUsername(username);
     this.userNotFoundException(Boolean(user));
 
