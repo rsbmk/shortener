@@ -7,7 +7,7 @@ import { SorturlModule } from './sorturl/sorturl.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [SorturlModule, ConfigModule.forRoot(), AuthModule, UsersModule],
+  imports: [SorturlModule, AuthModule, UsersModule, ConfigModule.forRoot()],
   controllers: [AppController],
 })
 export class AppModule {}

@@ -45,4 +45,13 @@ export class SortUrlRepository {
 
     return res.rows[0] as unknown as SortUrlModel | undefined;
   }
+
+  async findAllByUser(userId: number): Promise<SortUrlModel[]> {
+    const res = await this.db.client.execute({
+      sql: 'SELECT * FROM sortUrl WHERE userId = :userId AND state = 1',
+      args: { userId },
+    });
+
+    return res.rows as unknown as SortUrlModel[];
+  }
 }

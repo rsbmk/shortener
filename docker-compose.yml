@@ -1,20 +1,20 @@
 version: "3.5"
 services:
-    app:
-        container_name: sort-url-api
-        build: # "context" and "dockerfile" fields have to be under "build"
-            context: .
-            dockerfile: ./Dockerfile # Use for Development
-            # dockerfile: ./Dockerfile #Use for Production
-        ports:
-            - "3000:3000" #Server
-            # - "40404:9001" #Supervisor
-        volumes:
-            - .:/app
-        env_file:
-            - ./.env
-        networks:
-            - app-sorturl
+    # app:
+        # container_name: sort-url-api
+        # build: # "context" and "dockerfile" fields have to be under "build"
+        #     context: .
+        #     dockerfile: ./Dockerfile # Use for Development
+        #     # dockerfile: ./Dockerfile #Use for Production
+        # ports:
+        #     - "3000:3000" #Server
+        #     # - "40404:9001" #Supervisor
+        # volumes:
+        #     - .:/app
+        # env_file:
+        #     - ./.env
+        # networks:
+        #     - app-sorturl
     # sqllite:
     #     image: a9688bd1d9bb
     #           # platform: linux/x86_64 # Only for Macs (m1,m2)
@@ -27,6 +27,11 @@ services:
     #               #TZ: America/Bogota
     #     networks:
     #         - app-network 
+    redis:
+        container_name: redis
+        image: redis:latest
+        ports:
+            - "6379:6379"
 networks: 
     app-sorturl:
         name:

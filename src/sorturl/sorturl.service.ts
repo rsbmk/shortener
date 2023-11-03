@@ -20,8 +20,8 @@ export class SorturlService {
     });
   }
 
-  findAll() {
-    return `This action returns all sorturl`;
+  findAll(userId: number) {
+    return this.sortUrlRepository.findAllByUser(userId);
   }
 
   async findOneBySlug({ slug }: UpdateSortUrlDto): Promise<SortUrlModel | undefined> {

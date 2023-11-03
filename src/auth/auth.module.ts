@@ -15,7 +15,7 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
     UsersModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: jwtConstants.expires },
     }),
   ],

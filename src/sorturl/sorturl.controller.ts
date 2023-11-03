@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
-import { UsersModel } from 'src/users/entities/user.entity';
+import { UserAuth } from 'src/users/entities/user.entity';
+import { User } from 'src/users/user.decorator';
 import { CreateSorturlDto } from './dto';
 import { SorturlService } from './sorturl.service';
 
@@ -9,16 +10,13 @@ export class SorturlController {
   constructor(private readonly sorturlService: SorturlService) {}
 
   @Post()
-  create(@Body() { url, name }: CreateSorturlDto, @Req() req: any) {
-    // TODO: get user by custom decorator
-    const user = req.user as UsersModel;
-    try {
-      return this.sorturlService.create({ url, name, userId: user.id });
-    } catch (error) {
-      console.error({ error });
-    }
+  create(@Body() { url, name }: CreateSorturlDto, @User() user: UserAuth) {
+    return this.sorturlService.create({ url, name, userId: user.id });
+  }
 
-    return 'Something went wrong';
+  @Get('user')
+  findAllByUser(@User() user: UserAuth) {
+    return this.sorturlService.findAll(user.id);
   }
 
   @Delete(':id')
