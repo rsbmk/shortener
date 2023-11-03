@@ -15,20 +15,16 @@ export class SorturlService {
     if (name) slug = name;
     const sortUrl = `${origin}/${slug}`;
 
-    return this.sortUrlRepository
-      .create({ slug, url, sortUrl, userId })
-      .catch((err) => {
-        throw new BadRequestException(err.message);
-      });
+    return this.sortUrlRepository.create({ slug, url, sortUrl, userId }).catch((err) => {
+      throw new BadRequestException(err.message);
+    });
   }
 
   findAll() {
     return `This action returns all sorturl`;
   }
 
-  async findOneBySlug({
-    slug,
-  }: UpdateSortUrlDto): Promise<SortUrlModel | undefined> {
+  async findOneBySlug({ slug }: UpdateSortUrlDto): Promise<SortUrlModel | undefined> {
     const findedSort = await this.sortUrlRepository.findOneBySlug(slug);
 
     if (!findedSort) return undefined;

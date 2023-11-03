@@ -1,15 +1,17 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
+  Query,
   SetMetadata,
 } from '@nestjs/common';
-import { CreateUsersDto } from './users.dto';
+import { GET_USER_BY } from './entities/user.entity';
+import { CreateUsersDto, UpdateUsernameDto } from './users.dto';
 import { UsersService } from './users.service';
 
 export const IS_PUBLIC_KEY = 'isPublic';
@@ -22,25 +24,25 @@ export class UsersController {
   @Post()
   @Public()
   async create(@Body() createUserDto: CreateUsersDto) {
-    return await this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+  @Get(':identifier')
+  findOneByUsername(
+    @Param('identifier') identifier: string,
+    @Query('type') type: GET_USER_BY = GET_USER_BY.USERNAME,
+  ) {
+    if (type === GET_USER_BY.ID) {
+      if (isNaN(Number(identifier))) throw new BadRequestException('id is not a number');
 
-  @Get(':usernmae')
-  findOne(@Param('usernmae') usernmae: string) {
-    const user = this.usersService.findOne(usernmae);
-    if (!user) throw new NotFoundException('User not found');
-
-    return user;
+      return this.usersService.findOneById(BigInt(identifier));
+    }
+    return this.usersService.findOneByUsername(identifier);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: CreateUsersDto) {
-    return this.usersService.update(+id, updateUserDto);
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUsernameDto) {
+    return this.usersService.updateUsername(+id, updateUserDto);
   }
 
   @Delete(':id')

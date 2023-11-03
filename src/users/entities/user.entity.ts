@@ -14,8 +14,13 @@ export type UsersModel = {
 export type UserAuth = {
   id: number;
   username: string;
-  state: boolean;
+  state: 1 | 0;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
 };
+
+export enum GET_USER_BY {
+  ID = 'id',
+  USERNAME = 'username',
+}

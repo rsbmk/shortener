@@ -8,17 +8,17 @@ export class UsersRepository {
   constructor(private db: DB) {}
 
   async create({ password, username }: CreateUsersDto) {
-    try {
-      const res = await this.db.client.execute({
+    const res = await this.db.client
+      .execute({
         sql: 'INSERT INTO users (username, password) VALUES (:username, :password)',
         args: { username, password },
+      })
+      .catch((err) => {
+        const message = this.db.ERROR_MESSAGE_BY_ERROR_CODE[err.code].message;
+        throw new Error(message);
       });
 
-      return this.findOneById(res.lastInsertRowid);
-    } catch (error) {
-      // TODO: sent to sentry
-      throw new Error('Error to create user');
-    }
+    return this.findOneById(res.lastInsertRowid);
   }
 
   async findOneByUsername(username: string): Promise<UsersModel | undefined> {
@@ -40,21 +40,21 @@ export class UsersRepository {
   }
 
   async updateUsername(id: number, username: string) {
-    const res = await this.db.client.execute({
+    await this.db.client.execute({
       sql: `UPDATE users SET username = :username, updatedAt = CURRENT_TIMESTAMP WHERE id = :id AND state = 1`,
       args: { id, username },
     });
 
-    return res.rows[0] as unknown as UsersModel;
+    return this.findOneById(BigInt(id));
   }
 
   async updatePassword(id: number, password: string) {
-    const res = await this.db.client.execute({
+    await this.db.client.execute({
       sql: `UPDATE users SET password = :password, updatedAt = CURRENT_TIMESTAMP WHERE id = :id AND state = 1`,
       args: { id, password },
     });
 
-    return res.rows[0] as unknown as UsersModel;
+    return this.findOneById(BigInt(id));
   }
 
   async remove(id: number) {
@@ -63,6 +63,6 @@ export class UsersRepository {
       args: { id },
     });
 
-    return res.rows[0] as unknown as UsersModel;
+    return res.rowsAffected > 0;
   }
 }
