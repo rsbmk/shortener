@@ -11,6 +11,11 @@ export type CreateSortUrlService = {
   userId: number;
 };
 
+export type CreateTemporalSortUrlService = {
+  url: string;
+  name?: string;
+};
+
 export type SortUrlModel = {
   id: number;
   userId: number;

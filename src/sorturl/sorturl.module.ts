@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { DB } from 'src/db/db.service';
+import { CacheManager, DB } from 'src/db';
 import { SorturlController } from './sorturl.controller';
 import { SortUrlRepository } from './sorturl.repository';
 import { SorturlService } from './sorturl.service';
 
 @Module({
   controllers: [SorturlController],
-  providers: [SorturlService, SortUrlRepository, DB],
-  exports: [SorturlService, SortUrlRepository, DB],
+  providers: [SorturlService, SortUrlRepository, DB, CacheManager],
+  exports: [SorturlService, SortUrlRepository, DB, CacheManager],
 })
 export class SorturlModule {}

@@ -1,13 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  Length,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl, Length, MaxLength } from 'class-validator';
 
 export class CreateSorturlDto {
   @IsNotEmpty()
@@ -17,7 +8,6 @@ export class CreateSorturlDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(6)
   @MaxLength(10)
   name?: string;
 }
