@@ -23,14 +23,13 @@ export class SorturlController {
   @Public()
   @Post('temporal')
   temporalCreate(@Body() { url, name }: CreateSorturlDto) {
-    console.log('temporalCreate');
-    return this.sorturlService.temporalCreate({ url, name });
+    return this.sorturlService.temporalCreate({ url, name, userId: 0 });
   }
 
   @Get('user')
-  findAllByUser(@User() user: UserAuth) {
-    console.log('user');
-    return this.sorturlService.findAll(user.id);
+  findAllByUser(@User() user: UserAuth, @Query('temporal') temporal: boolean = false) {
+    if (temporal) return this.sorturlService.findAllTemporalsByUser(user.id);
+    return this.sorturlService.findAllByUser(user.id);
   }
 
   @Delete(':id')

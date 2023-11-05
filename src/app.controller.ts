@@ -2,7 +2,7 @@ import { Controller, Get, Param, Res } from '@nestjs/common';
 import { Response } from 'express';
 
 import { Public } from './auth/auth.module';
-import { ONE_WEEK_IN_MILLISECONDS } from './constanst';
+import { ONE_WEEK_IN_SECONDS } from './constanst';
 import { CacheManager } from './db';
 import { SortUrlModel } from './sorturl/entities/sorturl.entity';
 import { SorturlService } from './sorturl/sorturl.service';
@@ -17,7 +17,8 @@ export class AppController {
   @Public()
   @Get(':slug')
   async findOne(@Param('slug') slug: string, @Res() res: Response) {
-    const cachedUrl = await this.cacheManager.client.get(slug);
+    const [cacheKey] = await this.cacheManager.client.keys(`*:${slug}`);
+    const cachedUrl = await this.cacheManager.client.get(cacheKey);
     if (cachedUrl) return res.redirect(cachedUrl);
 
     let sorturl: SortUrlModel = undefined;
@@ -25,7 +26,7 @@ export class AppController {
     try {
       sorturl = await this.sorturlService.findOneBySlug({ slug });
       await this.cacheManager.client.set(sorturl.slug, sorturl.url, {
-        EX: ONE_WEEK_IN_MILLISECONDS,
+        EX: ONE_WEEK_IN_SECONDS,
       });
     } catch (error) {
       console.error({ error });

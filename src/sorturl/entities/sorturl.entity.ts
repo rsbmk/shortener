@@ -5,6 +5,13 @@ export type CreateSortUrlRepo = {
   userId: number;
 };
 
+export type SaveUrlCache = {
+  url: string;
+  slug: string;
+  userId: number;
+  ttl?: number;
+};
+
 export type CreateSortUrlService = {
   url: string;
   name?: string;
@@ -13,11 +20,6 @@ export type CreateSortUrlService = {
     temporal?: boolean;
     ttl?: string;
   };
-};
-
-export type CreateTemporalSortUrlService = {
-  url: string;
-  name?: string;
 };
 
 export type SortUrlModel = {

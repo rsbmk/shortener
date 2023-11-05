@@ -1,1 +1,1 @@
-export const ONE_WEEK_IN_MILLISECONDS = 604_800_000;
+export const ONE_WEEK_IN_SECONDS = 604_800;

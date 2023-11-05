@@ -1,13 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { ONE_WEEK_IN_MILLISECONDS } from 'src/constanst';
+import { ONE_WEEK_IN_SECONDS } from 'src/constanst';
 import { CacheManager } from 'src/db';
 import { UpdateSortUrlDto } from './dto';
-import {
-  CreateSortUrlService,
-  CreateTemporalSortUrlService,
-  SortUrlModel,
-} from './entities/sorturl.entity';
+import { CreateSortUrlService, SaveUrlCache, SortUrlModel } from './entities/sorturl.entity';
 import { SortUrlRepository } from './sorturl.repository';
 
 @Injectable()
@@ -18,11 +14,11 @@ export class SorturlService {
   ) {}
 
   async create({ url, name, userId, options }: CreateSortUrlService) {
-    const { temporal = false, ttl } = options || {};
+    const { temporal = false, ttl = ONE_WEEK_IN_SECONDS } = options || {};
     const { slug, sortUrl } = this.getSorUrl(name);
 
     if (temporal) {
-      await this.cacheManager.client.set(slug, url, { EX: Number(ttl) });
+      await this.saveSortUrlCache({ slug, url, userId, ttl: Number(ttl) });
       return { slug, url, sortUrl };
     }
 
@@ -31,14 +27,33 @@ export class SorturlService {
     });
   }
 
-  async temporalCreate({ url, name }: CreateTemporalSortUrlService) {
+  async temporalCreate({ url, name, userId, options }: CreateSortUrlService) {
     const { slug, sortUrl } = this.getSorUrl(name);
-    await this.cacheManager.client.set(slug, url, { EX: ONE_WEEK_IN_MILLISECONDS });
+    const ttl = options?.ttl ? Number(options.ttl) : undefined;
+
+    await this.saveSortUrlCache({ slug, url, userId, ttl });
     return { slug, url, sortUrl };
   }
 
-  findAll(userId: number) {
+  findAllByUser(userId: number) {
     return this.sortUrlRepository.findAllByUser(userId);
+  }
+
+  async findAllTemporalsByUser(userId: number) {
+    const keys = await this.cacheManager.client.keys(`${userId}:*`);
+
+    return Promise.all(
+      keys.map(async (key) => {
+        const url = await this.cacheManager.client.get(key);
+        const slug = key.split(':')[1];
+
+        return {
+          slug,
+          url,
+          sortUrl: `${process.env.ORIGIN}/${slug}`,
+        };
+      }),
+    );
   }
 
   async findOneBySlug({ slug }: UpdateSortUrlDto): Promise<SortUrlModel | undefined> {
@@ -58,6 +73,11 @@ export class SorturlService {
 
   remove(id: number) {
     return `This action removes a #${id} sorturl`;
+  }
+
+  private async saveSortUrlCache({ slug, url, userId, ttl }: SaveUrlCache) {
+    const defaultTtl = ttl ?? ONE_WEEK_IN_SECONDS;
+    await this.cacheManager.client.set(`${userId}:${slug}`, url, { EX: defaultTtl });
   }
 
   private getSorUrl(name: string) {
