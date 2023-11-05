@@ -17,8 +17,14 @@ export class SorturlService {
     private cacheManager: CacheManager,
   ) {}
 
-  create({ url, name, userId }: CreateSortUrlService) {
+  async create({ url, name, userId, options }: CreateSortUrlService) {
+    const { temporal = false, ttl } = options || {};
     const { slug, sortUrl } = this.getSorUrl(name);
+
+    if (temporal) {
+      await this.cacheManager.client.set(slug, url, { EX: Number(ttl) });
+      return { slug, url, sortUrl };
+    }
 
     return this.sortUrlRepository.create({ slug, url, sortUrl, userId }).catch((err) => {
       throw new BadRequestException(err.message);

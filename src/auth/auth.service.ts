@@ -20,9 +20,18 @@ export class AuthService {
     if (!isMatch) throw new UnauthorizedException();
 
     const result = this.usersService.returnUserWithoutPassword(user);
+    let access_token: string;
+
+    try {
+      access_token = await this.jwtService.signAsync(result, {
+        secret: process.env.JWT_SECRET,
+      });
+    } catch (error) {
+      console.log('login error', error);
+    }
 
     return {
-      access_token: await this.jwtService.signAsync(result),
+      access_token,
     };
   }
 }

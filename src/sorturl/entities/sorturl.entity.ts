@@ -9,6 +9,10 @@ export type CreateSortUrlService = {
   url: string;
   name?: string;
   userId: number;
+  options?: {
+    temporal?: boolean;
+    ttl?: string;
+  };
 };
 
 export type CreateTemporalSortUrlService = {
