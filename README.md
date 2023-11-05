@@ -1,5 +1,15 @@
 # Shortener
 
+## Tabla de contenido
+   * [Sobre el proyecto](#sobre-el-proyecto)
+   * [Paso a pasao de creación del proyecto](#paso-a-pasao-de-creación-del-proyecto)
+   * [Instalación](#instalación)
+   * [Proximos pasos](#proximos-pasos)
+   * [Como probar](#como-probar)
+
+## Sobre el proyecto
+Este proyecto es un acortador de enlaces, que permite a los usuarios crear enlaces cortos para compartirlos con otras personas. El proyecto ha sido desarrollado utilizando el framework NestJS, y se ha implementado un sistema de autenticación basado en JSON Web Tokens (JWT). El proyecto ha sido desplegado en un entorno de producción, y se ha implementado un sistema de cacheo utilizando Redis. El proyecto ha sido desarrollado como parte de una practica didáctica.
+
 ## Paso a pasao de creación del proyecto
 
 - **Contabilizar las visitas a los enlaces**: Se ha implementado un sistema para contabilizar las visitas a los enlaces, para permitir a los usuarios obtener estadísticas sobre sus enlaces.
@@ -53,3 +63,7 @@
 
 ## Proximos pasos
 - [ ] Crear una UI para el proyecto
+
+## Como probar
+En el proyecto esta incluido el archivo `insomnia_endpoints.json` que contiene todos los endpoints para probar el proyecto.
+Solo tienes que importar el archivo en el cliente de insomnia y probar los endpoints.
