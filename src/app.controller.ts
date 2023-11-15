@@ -18,8 +18,10 @@ export class AppController {
   @Get(':slug')
   async findOne(@Param('slug') slug: string, @Res() res: Response) {
     const [cacheKey] = await this.cacheManager.client.keys(`*:${slug}`);
-    const cachedUrl = await this.cacheManager.client.get(cacheKey);
-    if (cachedUrl) return res.redirect(cachedUrl);
+    if (cacheKey) {
+      const cachedUrl = await this.cacheManager.client.get(cacheKey);
+      return res.redirect(cachedUrl);
+    }
 
     let sorturl: SortUrlModel = undefined;
 
