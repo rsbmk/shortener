@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 
+import { ONE_WEEK_IN_SECONDS } from 'src/constanst';
 import { UserAuth } from 'src/users/entities/user.entity';
 import { User } from 'src/users/user.decorator';
 import { Public } from 'src/users/users.controller';
@@ -15,7 +16,7 @@ export class SorturlController {
     @Body() { url, name }: CreateSorturlDto,
     @User() user: UserAuth,
     @Query('temporal') temporal: boolean = false,
-    @Query('ttl') ttl: string = '1w',
+    @Query('ttl') ttl: string = String(ONE_WEEK_IN_SECONDS),
   ) {
     return this.sorturlService.create({ url, name, userId: user.id, options: { temporal, ttl } });
   }
