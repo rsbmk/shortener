@@ -1,38 +1,36 @@
-version: "3.5"
+version: "3.8"
 services:
-    # app:
-        # container_name: sort-url-api
-        # build: # "context" and "dockerfile" fields have to be under "build"
-        #     context: .
-        #     dockerfile: ./Dockerfile # Use for Development
-        #     # dockerfile: ./Dockerfile #Use for Production
-        # ports:
-        #     - "3000:3000" #Server
-        #     # - "40404:9001" #Supervisor
-        # volumes:
-        #     - .:/app
-        # env_file:
-        #     - ./.env
-        # networks:
-        #     - app-sorturl
-    # sqllite:
-    #     image: a9688bd1d9bb
-    #           # platform: linux/x86_64 # Only for Macs (m1,m2)
-    #     ports:
-    #         - "4406:8080"
-    #     # volumes:
-    #     #     - ./src/db/dev.db:/var/lib/sqld
-    #     # environment:
-    #         # MYSQL_ROOT_PASSWORD: "root"
-    #               #TZ: America/Bogota
-    #     networks:
-    #         - app-network 
+    shortener:
+        container_name: shortener-api
+        restart: unless-stopped
+        env_file:
+            - ./.env
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - "3000:3000"
+            - "9229:9229"
+        volumes:
+            - .:/app
+            - node_modules:/app/node_modules
+        networks:
+            - app-sorturl
+
     redis:
-        container_name: redis
-        image: redis:latest
+        image: redis
+        container_name: redis_shortener
         ports:
             - "6379:6379"
+        volumes:
+            - ./redis.conf:/usr/local/etc/redis/redis.conf
+        networks:
+            - app-sorturl
+
+volumes:
+    node_modules:
+
 networks: 
     app-sorturl:
         name:
-            bmk_mynetwork
+            sortener_app_mynetwork
