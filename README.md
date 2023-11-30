@@ -51,6 +51,15 @@ Este proyecto es un acortador de enlaces, que permite a los usuarios crear enlac
     ```
 
 2. Correr el servidor
+   
+   A. Usando Docker: Es la mejor forma puesto que te levantara los servicios necesarios como la base de datos en redis.
+   ```bash
+    # Correr el servidor
+    $ docker-compose up
+   ```
+   El servidor estara corriendo en el **puerto 3000**.
+
+   B. Sin usar Docker: Debes tener instalado redis en tu maquina.
 
    ```bash
     # development
